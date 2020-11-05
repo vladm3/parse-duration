@@ -1,4 +1,4 @@
-let duration = /(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([a-zµμ]*)/ig
+var duration = /(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([a-zµμ]*)/ig
 
 
 /**
@@ -51,14 +51,14 @@ parse.y = parse.d * 365.25
  * @return {Number}
  */
 
-export default function parse(str='', format='ms'){
+export default function parse(str, format){
   var result = null
   // ignore commas
-  str = str.replace(/(\d),(\d)/g, '$1$2')
+  str = (str || '').replace(/(\d),(\d)/g, '$1$2')
   str.replace(duration, function(_, n, units){
     units = parse[units] || parse[units.toLowerCase().replace(/s$/, '')]
     if (units) result = (result || 0) + parseFloat(n, 10) * units
   })
 
-  return result && (result / parse[format])
+  return result && (result / parse[format || 'ms'])
 }
